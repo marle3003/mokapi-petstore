@@ -47,6 +47,9 @@ jobs:
           npm test
           kill $APP_PID
 
+      - name: Stop Mokapi
+        run: docker stop mokapi
+
       - name: Capture Mokapi Logs
         run: docker logs mokapi > mokapi.log
 
@@ -55,6 +58,3 @@ jobs:
         with:
           name: mokapi-logs
           path: mokapi.log
-
-      - name: Stop Mokapi
-        run: docker stop mokapi
