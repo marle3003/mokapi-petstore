@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "setup-db": "node dist/setup-db.js",
-    "copy-public": "ncp src/public dist/public",
+    "copy-public": "mkdir -p dist/public && ncp src/public dist/public",
     "build": "npm run copy-public && tsc",
     "start": "node dist/server.js",
     "test": "npx playwright test"
