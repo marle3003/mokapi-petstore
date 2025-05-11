@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Petstore App</title>
+
+  <!-- Bootstrap 5.3 CDN -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    h3 {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">🐾 Petstore Dashboard</h1>
+
+    <div class="row">
+      <!-- Pets Section -->
+      <section class="col-md-6 mb-4" aria-label="pets">
+        <div class="card shadow">
+          <div class="card-header d-flex container">
+            <h2 class="col align-self-start mb-0">Pets</h2>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-primary" onclick="fetchPets()">Pets</button>
+              <button class="btn btn-sm btn-primary" onclick="fetchPets('dog')">Dogs</button>
+            </div>
+          </div>
+          <div class="card-body" id="petList">
+            <!-- Orders will be dynamically injected here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Section -->
+      <section class="col-md-6 mb-4" aria-label="orders">
+        <div class="card shadow">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Orders</h2>
+            <button class="btn btn-sm btn-primary" onclick="fetchOrders()">Refresh</button>
+          </div>
+          <div class="card-body" id="orderList">
+            <!-- Orders will be dynamically injected here -->
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function formatDate(d) {
+      return `${d.toLocaleString()} ${d.toLocaleTimeString()}`
+    }
+
+    async function fetchPets(category) {
+      let url = '/api/pets';
+      if (category) {
+        url += '?category=' + category;
+      }
+
+      const response = await fetch(url);
+      const pets = await response.json();
+      const petList = document.getElementById('petList');
+      petList.innerHTML = '';
+      pets.forEach(pet => {
+        // Create a new card for each pet
+        const petCard = document.createElement('div');
+        petCard.className = 'card mb-3';
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        // Create the content inside the card
+        cardBody.innerHTML = `<section aria-label="pet-${pet.id}">
+          <h3 class="card-title">Pet ID: ${pet.id}</h3>
+          <p class="card-text"><strong>Pet Name:</strong> ${pet.name}</p>
+          <p class="card-text"><strong>Category:</strong> ${pet.category}</p>
+          </section>
+        `;
+
+        // Append the card content to the card
+        petCard.appendChild(cardBody);
+
+        // Append the card to the order list
+        petList.appendChild(petCard);
+      });
+    }
+
+    async function fetchOrders() {
+      const response = await fetch('/api/orders');
+      const orders = await response.json();
+      const orderList = document.getElementById('orderList');
+      orderList.innerHTML = '';
+
+      orders.forEach(order => {
+        // Create a new card for each order
+        const orderCard = document.createElement('div');
+        orderCard.className = 'card mb-3';
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        // Create the content inside the card
+        cardBody.innerHTML = `<section aria-label="order-${order.id}">
+          <h3 class="card-title">Order ID: ${order.id}</h3>
+          <p class="card-text"><strong>Pet ID:</strong> ${order.petId}</p>
+          <p class="card-text"><strong>Status:</strong> ${order.status}</p>
+          <p class="card-text"><strong>Shipdate:</strong> ${ order.shipDate ? formatDate(new Date(order.shipDate)) : '-'}</p>
+          <p class="card-text"><strong>Placed:</strong> ${ order.placed ? formatDate(new Date(order.placed.timestamp)) : '-'}</p>
+          <p class="card-text"><strong>Accepted:</strong> ${ order.accepted ? formatDate(new Date(order.accepted.timestamp)) : '-'}</p>
+          <p class="card-text"><strong>Completed:</strong> ${ order.completed ? formatDate(new Date(order.completed.timestamp)) : '-'}</p>
+          </section>
+        `;
+
+        // Append the card content to the card
+        orderCard.appendChild(cardBody);
+
+        // Append the card to the order list
+        orderList.appendChild(orderCard);
+      });
+    }
+
+    // Load initial data
+    fetchPets();
+    fetchOrders();
+  </script>
+</body>
+</html>

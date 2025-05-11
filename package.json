@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "scripts": {
+    "setup-db": "node dist/setup-db.js",
+    "copy-public": "ncp src/public dist/public",
+    "build": "npm run copy-public && tsc",
+    "start": "node dist/server.js",
+    "test": "npx playwright test"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "express": "^5.1.0",
+    "kafkajs": "^2.2.4",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/express": "^5.0.1",
+    "@types/mokapi": "^0.10.0",
+    "@types/node": "^22.15.12",
+    "ncp": "^2.0.0"
+  }
+}
