@@ -18,7 +18,7 @@ jobs:
       - name: Start Mokapi
         run: |
           docker run -d --rm --name mokapi \
-          -p 80:80 -p 8080:8080 \
+          -p 80:80 -p 9092:9092 \
           -v ${{ github.workspace }}/mocks:/mocks \
           mokapi/mokapi:latest /mocks
 
@@ -31,7 +31,7 @@ jobs:
         run: npm install
 
       - name: Install Playwright
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium --with-deps
 
       - name: Build
         run: npm run build
