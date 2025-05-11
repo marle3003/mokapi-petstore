@@ -17,7 +17,7 @@ jobs:
 
       - name: Start Mokapi
         run: |
-          docker run -d --rm --name mokapi \
+          docker run -d --name mokapi \
           -p 80:80 -p 9092:9092 \
           -v ${{ github.workspace }}/mocks:/mocks \
           mokapi/mokapi:latest /mocks
@@ -48,10 +48,10 @@ jobs:
           kill $APP_PID
 
       - name: Stop Mokapi
-        run: docker stop mokapi
-
-      - name: Capture Mokapi Logs
-        run: docker logs mokapi > mokapi.log
+        run: |
+          docker stop mokapi
+          docker logs mokapi > mokapi.log
+          docker rm mokapi
 
       - name: Upload Mokapi Logs
         uses: actions/upload-artifact@v4
